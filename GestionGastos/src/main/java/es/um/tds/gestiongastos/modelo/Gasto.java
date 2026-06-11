@@ -4,21 +4,23 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Representa un gasto registrado en el sistema.
  * Un gasto puede ser personal (sin cuenta compartida) o estar asociado a una cuenta compartida.
  */
 public class Gasto {
-	private static int counterID = 0;
+	private static int contadorID = 0;
 	
 	private int id;
-	private double amount;
-	private LocalDateTime date;
-	private String note;
-	private String paymentMethod;
-	private String coin;
-	private Categoria category;
-	private Persona payer;
+	private double cantidad;
+	private LocalDateTime fecha;
+	private String nota;
+	private String metodoPago;
+	private String moneda;
+	private Categoria categoria;
+	private Persona pagador;
 	
 	/**
 	 * Constructor completo de Gasto
@@ -36,14 +38,14 @@ public class Gasto {
 		validarCantidad(_amount);
 		validarCategoria(_category);
 		
-		this.id = ++counterID;
-		this.amount = _amount;
-		this.date = (_date != null) ? _date : LocalDateTime.now();
-		this.note = (_note != null) ? _note.trim() : "";
-		this.paymentMethod = (_paymentMethod != null) ? _paymentMethod.trim() : "";
-		this.coin = (_coin != null && !_coin.trim().isEmpty()) ? _coin.trim() : "EUR";
-		this.category = _category;
-		this.payer = _payer;
+		this.id = ++contadorID;
+		this.cantidad = _amount;
+		this.fecha = (_date != null) ? _date : LocalDateTime.now();
+		this.nota = (_note != null) ? _note.trim() : "";
+		this.metodoPago = (_paymentMethod != null) ? _paymentMethod.trim() : "";
+		this.moneda = (_coin != null && !_coin.trim().isEmpty()) ? _coin.trim() : "EUR";
+		this.categoria = _category;
+		this.pagador = _payer;
 	}
 	
 	/**
@@ -86,82 +88,83 @@ public class Gasto {
 	}
 	
 	public double getCantidad() {
-		return amount;
+		return cantidad;
 	}
 	
 	public LocalDateTime getFecha() {
-		return date;
+		return fecha;
 	}
 	
 	public Optional<String> getNota(){
-		return Optional.ofNullable(note).filter(n -> !n.trim().isEmpty());
+		return Optional.ofNullable(nota).filter(n -> !n.trim().isEmpty());
 	}
 	
 	public Optional<String> getMetodoPago(){
-		return Optional.ofNullable(paymentMethod).filter(m -> !m.trim().isEmpty());
+		return Optional.ofNullable(metodoPago).filter(m -> !m.trim().isEmpty());
 	}
 	
 	public String getMoneda() {
-		return coin;
+		return moneda;
 	}
 	
 	public Categoria getCategoria() {
-		return category;
+		return categoria;
 	}
 	
 	public Optional<Persona> getPagador(){
-		return Optional.ofNullable(payer);
+		return Optional.ofNullable(pagador);
 	}
 	
+	@JsonIgnore
 	public boolean isPersonal() {
-		return payer == null;
+		return pagador == null;
 	}
 	
 	public void setCantidad(double _amount) {
 		validarCantidad(_amount);
-		this.amount = _amount;
+		this.cantidad = _amount;
 	}
 	
 	public void setFecha(LocalDateTime _date) {
 		if (_date != null) {
-			this.date = _date;
+			this.fecha = _date;
 		}
 	}
 	
 	public void setNota(String _note) {
-		this.note = _note;
+		this.nota = _note;
 	}
 	
 	public void setMetodoPago (String _paymentMethod) {
-		this.paymentMethod = _paymentMethod;
+		this.metodoPago = _paymentMethod;
 	}
 	
 	public void setMoneda(String _coin) {
-		this.coin = (_coin != null && !_coin.trim().isEmpty()) ? _coin.trim() : "EUR";
+		this.moneda = (_coin != null && !_coin.trim().isEmpty()) ? _coin.trim() : "EUR";
 	}
 	
 	public void setCategoria(Categoria _category) {
 		validarCategoria(_category);
-		this.category = _category;
+		this.categoria = _category;
 	}
 	
 	public void setPagador(Persona _payer) {
-		this.payer = _payer;
+		this.pagador = _payer;
 	}
 	
 	protected void setID(int _ID) {
 		this.id = _ID;
-		if (_ID >= counterID) {
-			counterID = _ID;
+		if (_ID >= contadorID) {
+			contadorID = _ID;
 		}
 	}
 	
 	public static void resetContador() {
-		counterID = 0;
+		contadorID = 0;
 	}
 	
 	public static void setContador(int _counter) {
-		counterID = _counter;
+		contadorID = _counter;
 	}
 	
 	@Override
@@ -181,6 +184,6 @@ public class Gasto {
 	public String toString() {
 		String noteStr = getNota().orElse("sin nota");
 		return String.format("Gasto[id=%d, cantidad=%.2f %s, fecha=%s, categoria=%s, nota=%s]",
-								id, amount, coin, date.toLocalDate(), category.getNombre(), noteStr);
+								id, cantidad, moneda, fecha.toLocalDate(), categoria.getNombre(), noteStr);
 	}
 }

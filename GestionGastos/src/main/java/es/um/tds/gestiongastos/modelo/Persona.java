@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Persona {
 
-	private String name;
+	private String nombre;
 	
 	/**
 	 * Constructor de Persona.
@@ -15,18 +15,18 @@ public class Persona {
 		if(_name == null || _name.trim().isEmpty()) {
 			throw new IllegalArgumentException("El nombre no puede ser null ni vacio");
 		}
-		this.name = _name.trim();
+		this.nombre = _name.trim();
 	}
 	
 	protected Persona() {
 	}
 	
 	public String getNombre() {
-		return this.name;
+		return this.nombre;
 	}
 	
 	protected void setNombre(String _name) {
-		this.name = _name;
+		this.nombre = _name;
 	}
 	
 	@Override
@@ -34,16 +34,16 @@ public class Persona {
 		if (this == _obj) return true;
 		if (_obj == null || getClass() != _obj.getClass()) return false;
 		Persona persona = (Persona) _obj;
-		return Objects.equals(name,  persona.name);
+		return Objects.equals(nombre,  persona.nombre);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(name);
+		return Objects.hash(nombre);
 	}
 	
 	@Override
 	public String toString() {
-		return name;
+		return nombre;
 	}
 }

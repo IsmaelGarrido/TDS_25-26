@@ -37,7 +37,7 @@
             <version>${javafx.version}</version>
         </dependency>
         
-        <!-- JavaFX Graphics (para graficos de barras/circulares) -->
+        <!-- JavaFX Graphics -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
@@ -65,21 +65,28 @@
             <version>${jackson.version}</version>
         </dependency>
         
-        <!-- Jackson JavaTime (para LocalDateTime, LocalDate, etc.) -->
+        <!-- Jackson JavaTime -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
         </dependency>
         
-        <!-- CalendarFX (opcional, para visualizacion de calendario) -->
+        <!-- Jackson JDK8 -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.datatype</groupId>
+		    <artifactId>jackson-datatype-jdk8</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+        
+        <!-- CalendarFX -->
         <dependency>
             <groupId>com.calendarfx</groupId>
             <artifactId>view</artifactId>
             <version>11.12.7</version>
         </dependency>
         
-        <!-- JUnit 5 para testing-->
+        <!-- JUnit 5 -->
         <dependency>
         	<groupId>org.junit.jupiter</groupId>
         	<artifactId>junit-jupiter</artifactId>

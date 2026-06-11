@@ -263,6 +263,20 @@ public class GestionGastos {
         return repoCategorias.deleteCategoria(categoria);
     }
     
+    /**
+     * Intenta cambiar una categoría
+     * @param categoria Categoría a modificar
+     * @param nombre Nuevo Nombre
+     * @return 0 en cambio exitoso
+     *        -1 si nombre inválido
+     *        -2 si categoría predefinida
+     *        -3 si categoría no existe
+     *        -4 si el nombre ya existe
+     */
+    public int editarNombreCategoría(Categoria categoria, String nombre) {
+    	return repoCategorias.editNameCategoria(categoria, nombre);
+    }
+    
     // ==================== GESTIÓN DE CUENTAS COMPARTIDAS ====================
     
     /**

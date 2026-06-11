@@ -32,12 +32,12 @@ public class CuentaEquitativa extends CuentaCompartida{
 	@Override
 	public double calcularProporcion(Persona _person) {
 		validarPersonaEnCuenta(_person);
-		return 1.0/ getNumPersonas();
+		return 1.0/ calcularNumPersonas();
 	}
 	
 	@Override
 	public String toString() {
 		return String.format("CuentaEquitativa[id=%d, nombre=%s, personas=%d, gastoTotal=%.2f€", 
-				getID(), getNombre(), getNumPersonas(), getGastoTotal());
+				getID(), getNombre(), calcularNumPersonas(), calcularGastoTotal());
 	}
 }

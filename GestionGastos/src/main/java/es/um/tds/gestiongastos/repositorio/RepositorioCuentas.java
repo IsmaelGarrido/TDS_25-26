@@ -14,28 +14,28 @@ import java.util.stream.Collectors;
  */
 public class RepositorioCuentas {
 	
-	private static RepositorioCuentas instance;
+	private static RepositorioCuentas instancias;
 	
-	private List<CuentaCompartida> accounts;
+	private List<CuentaCompartida> cuentas;
 	
 	private RepositorioCuentas() {
-		this.accounts = new ArrayList<>();
+		this.cuentas = new ArrayList<>();
 	}
 	
 	public static synchronized RepositorioCuentas getInstance() {
-		if (instance == null) {
-			instance = new RepositorioCuentas();
+		if (instancias == null) {
+			instancias = new RepositorioCuentas();
 		}
 		
-		return instance;
+		return instancias;
 	}
 	
 	public List<CuentaCompartida> getTotalCuentas(){
-		return new ArrayList<>(accounts);
+		return new ArrayList<>(cuentas);
 	}
 	
 	public Optional<CuentaCompartida> getCuentaByID(int _ID){
-		return accounts.stream()
+		return cuentas.stream()
 				.filter(c -> c.getID() == _ID)
 				.findFirst();
 	}
@@ -43,7 +43,7 @@ public class RepositorioCuentas {
 	public Optional<CuentaCompartida> getCuentaByNombre(String _name){
 		if (_name == null) return Optional.empty();
 		
-		return accounts.stream()
+		return cuentas.stream()
 				.filter(c -> c.getNombre().equalsIgnoreCase(_name.trim()))
 				.findFirst();
 	}
@@ -59,7 +59,7 @@ public class RepositorioCuentas {
 		}
 		
 		if (getCuentaByID(_account.getID()).isEmpty()) {
-			accounts.add(_account);
+			cuentas.add(_account);
 		}
 	}
 	
@@ -68,7 +68,7 @@ public class RepositorioCuentas {
 			return false;
 		}
 		
-		return accounts.remove(_account);
+		return cuentas.remove(_account);
 	}
 
 	public boolean deleteByID(int _ID) {
@@ -81,7 +81,7 @@ public class RepositorioCuentas {
 			return new ArrayList<>();
 		}
 		
-		return accounts.stream()
+		return cuentas.stream()
 				.filter(c -> c.contienePersona(_person))
 				.collect(Collectors.toList());
 	}
@@ -91,15 +91,15 @@ public class RepositorioCuentas {
 	}
 	
 	public int count() {
-		return accounts.size();
+		return cuentas.size();
 	}
 	
 	public void reset() {
-		accounts.clear();
+		cuentas.clear();
 		CuentaCompartida.resetContador();
 	}
 	
 	public static synchronized void resetInstance() {
-		instance = null;
+		instancias = null;
 	}
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 import es.um.tds.gestiongastos.modelo.*;
 import es.um.tds.gestiongastos.repositorio.*;
@@ -62,6 +63,9 @@ public class PersistenciaJSON  {
         // Acceder a campos privados
         om.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         
+        // Registra el modulo JDK8
+        om.registerModule(new Jdk8Module());
+        
         // Habilitar polimorfismo para CuentaCompartida
         om.activateDefaultTyping(
             om.getPolymorphicTypeValidator(),
@@ -100,7 +104,7 @@ public class PersistenciaJSON  {
      */
     private DatosAplicacion recopilarDatos() {
         return new DatosAplicacion(
-            RepositorioCategorias.getInstance().getTodasCategorias(),
+            RepositorioCategorias.getInstance().getCategoriasPersonalizadas(),
             RepositorioGastos.getInstance().getTodosGastos(),
             RepositorioCuentas.getInstance().getTotalCuentas(),
             RepositorioAlertas.getInstance().getTotalAlertas(),
@@ -139,21 +143,35 @@ public class PersistenciaJSON  {
      * @param datos Datos a restaurar
      */
     public void restaurarDatos(DatosAplicacion datos) {
-        // Limpiar repositorios
+        // Limpiar todo — contador queda a 0, predefinidas se reinicializan
         limpiarRepositorios();
         
-        // Restaurar contadores primero (para evitar colisiones de ID)
-        Categoria.setContador(datos.getContadorCategoria());
+        // Las predefinidas ya están con IDs 1-12
+        // El contador ahora está en 12 tras inicializarlas
+        // Solo necesitamos asegurarnos de que es mayor que el del JSON
+        int maxIDCategoria = Math.max(
+            datos.getContadorCategoria(),
+            RepositorioCategorias.getInstance()
+                .getTodasCategorias().stream()
+                .mapToInt(Categoria::getID)
+                .max()
+                .orElse(0)
+        );
+        Categoria.setContador(maxIDCategoria);
         Gasto.setContador(datos.getContadorGasto());
         CuentaCompartida.setContador(datos.getContadorCuenta());
         Alerta.setContador(datos.getContadorAlerta());
         Notificacion.setContador(datos.getContadorNotificacion());
         
-        // Restaurar categorías (las predefinidas ya están, solo añadir personalizadas)
+        // Restaurar solo personalizadas — addCategoria les asignará
+        // nuevos IDs continuando desde maxIDCategoria
         RepositorioCategorias repoCategorias = RepositorioCategorias.getInstance();
         for (Categoria cat : datos.getCategorias()) {
-            if (!cat.isBase() && !repoCategorias.existsByNombre(cat.getNombre())) {
-                repoCategorias.addCategoria(cat);
+            if (!repoCategorias.existsByNombre(cat.getNombre())) {
+                // Crear nueva instancia con nuevo ID en lugar de restaurar
+                // la del JSON que tiene ID conflictivo
+                Categoria nueva = new Categoria(cat.getNombre(), false);
+                repoCategorias.addCategoria(nueva);
             }
         }
         

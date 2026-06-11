@@ -15,47 +15,47 @@ import java.util.stream.Collectors;
 
 public class RepositorioCategorias {
 	
-	private static RepositorioCategorias instance;
+	private static RepositorioCategorias instancia;
 	
-	private List<Categoria> categories;
+	private List<Categoria> categorias;
 	
 	/**
 	 * Contructor privado (Singleton).
 	 */
 	private RepositorioCategorias() {
-		this.categories = new ArrayList<>();
+		this.categorias = new ArrayList<>();
 		inicializarCategoriasPredefinidas();
 	}
 	
 	public static synchronized RepositorioCategorias getInstance() {
-		if (instance == null) {
-			instance = new RepositorioCategorias();
+		if (instancia == null) {
+			instancia = new RepositorioCategorias();
 		}
 		
-		return instance;
+		return instancia;
 	}
 	
 	private void inicializarCategoriasPredefinidas() {
-		categories.add(new Categoria("Alimentación", true));
-        categories.add(new Categoria("Transporte Público", true));
-        categories.add(new Categoria("Ocio", true));
-        categories.add(new Categoria("Gasolina", true));
-        categories.add(new Categoria("Regalos", true));
-        categories.add(new Categoria("Reparaciones", true));
-        categories.add(new Categoria("Gastos Médicos", true));
-        categories.add(new Categoria("Hogar", true));
-        categories.add(new Categoria("Ropa", true));
-        categories.add(new Categoria("Entretenimiento", true));
-        categories.add(new Categoria("Educación", true));
-        categories.add(new Categoria("Otros", true));
+		categorias.add(new Categoria("Alimentación", true));
+        categorias.add(new Categoria("Transporte Público", true));
+        categorias.add(new Categoria("Ocio", true));
+        categorias.add(new Categoria("Gasolina", true));
+        categorias.add(new Categoria("Regalos", true));
+        categorias.add(new Categoria("Reparaciones", true));
+        categorias.add(new Categoria("Gastos Médicos", true));
+        categorias.add(new Categoria("Hogar", true));
+        categorias.add(new Categoria("Ropa", true));
+        categorias.add(new Categoria("Entretenimiento", true));
+        categorias.add(new Categoria("Educación", true));
+        categorias.add(new Categoria("Otros", true));
 	}
 	
 	public List<Categoria> getTodasCategorias(){
-		return new ArrayList<>(categories);
+		return new ArrayList<>(categorias);
 	}
 	
 	public Optional<Categoria> getCategoriaByID(int _ID){
-		return categories.stream()
+		return categorias.stream()
 				.filter(c -> c.getID() == _ID)
 				.findFirst();
 	}
@@ -63,7 +63,7 @@ public class RepositorioCategorias {
 	public Optional<Categoria> getCategoriaByNombre(String _name){
 		if (_name == null) return Optional.empty();
 		
-		return categories.stream()
+		return categorias.stream()
 				.filter(c -> c.getNombre().equalsIgnoreCase(_name.trim()))
 				.findFirst();
 	}
@@ -86,7 +86,28 @@ public class RepositorioCategorias {
 			throw new IllegalArgumentException("Ya existe una categoría con el nombre: " + _category.getNombre());
 		}
 		
-		categories.add(_category);
+		categorias.add(_category);
+	}
+	
+	/**
+	 * Intenta cambiar el nombre de una categoría
+	 * @param _category Categoría a modificar
+	 * @param _name Nuevo nombre
+	 * @return 0 en cambio exitoso
+	 *        -1 si es nombre null o vacío
+	 *        -2 si es categoría predefinida
+	 *        -3 si no existe la categoría
+	 *        -4 si el nombre ya existe
+	 */
+	public int editNameCategoria(Categoria _category, String _name) {
+		if (_category == null || getCategoriaByID(_category.getID()).isEmpty()) {
+			return -3;
+		}
+		if (existsByNombre(_name)) {
+			return -4;
+		}
+		
+		return _category.cambiarNombre(_name);
 	}
 	
 	/**
@@ -105,7 +126,7 @@ public class RepositorioCategorias {
 			throw new IllegalStateException("No se puede eliminar una categoría predefinida.");
 		}
 		
-		return categories.remove(_category);
+		return categorias.remove(_category);
 	}
 	
 	public boolean deleteCategoriaByID(int _ID) {
@@ -114,13 +135,13 @@ public class RepositorioCategorias {
 	}
 	
 	public List<Categoria> getCategoriasPredefinidas(){
-		return categories.stream()
+		return categorias.stream()
 				.filter(Categoria::isBase)
 				.collect(Collectors.toList());
 	}
 	
 	public List<Categoria> getCategoriasPersonalizadas(){
-		return categories.stream()
+		return categorias.stream()
 				.filter(c -> !c.isBase())
 				.collect(Collectors.toList());
 	}
@@ -130,16 +151,16 @@ public class RepositorioCategorias {
 	}
 	
 	public int countCategorias() {
-		return categories.size();
+		return categorias.size();
 	}
 	
 	public void reset() {
-		categories.clear();
+		categorias.clear();
 		Categoria.resetContador();
 		inicializarCategoriasPredefinidas();
 	}
 	
 	public static synchronized void resetInstance() {
-		instance = null;
+		instancia = null;
 	}
 }

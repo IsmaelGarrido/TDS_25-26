@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class CuentaPorcentaje extends CuentaCompartida{
 	
-	private Map<Persona, Double> percentages;
+	private Map<Persona, Double> porcentajes;
 	
 	/**
 	 * Contructor con la lista de personas y porcentajes.
@@ -23,7 +23,7 @@ public class CuentaPorcentaje extends CuentaCompartida{
 	public CuentaPorcentaje(String _name, List<Persona> _people, Map<Persona, Double> _percentages) {
 		super(_name, _people);
 		validarPorcentajes(_percentages);
-		this.percentages = new HashMap<>(_percentages);
+		this.porcentajes = new HashMap<>(_percentages);
 	}
 	
 	/**
@@ -34,10 +34,10 @@ public class CuentaPorcentaje extends CuentaCompartida{
 	 */
 	public CuentaPorcentaje(String _name, List<Persona> _people) {
 		super(_name, _people);
-		this.percentages = new HashMap<>();
+		this.porcentajes = new HashMap<>();
 		double percentage = 100.0/_people.size();
-		for (Persona p: people) {
-			percentages.put(p, percentage);
+		for (Persona p: this.personas) {
+			porcentajes.put(p, percentage);
 		}
 	}
 	
@@ -61,7 +61,7 @@ public class CuentaPorcentaje extends CuentaCompartida{
 	
 	protected CuentaPorcentaje() {
 		super();
-		this.percentages = new HashMap<>();
+		this.porcentajes = new HashMap<>();
 	}
 	
 	private void validarPorcentajes(Map<Persona, Double> _percentages) {
@@ -92,11 +92,11 @@ public class CuentaPorcentaje extends CuentaCompartida{
 		
 	public double getPorcentaje(Persona _person) {
 		validarPersonaEnCuenta(_person);
-		return percentages.getOrDefault(_person, 0.0);
+		return porcentajes.getOrDefault(_person, 0.0);
 	}
 	
 	public Map<Persona, Double> getPorcentajes(){
-		return new HashMap<>(percentages);
+		return new HashMap<>(porcentajes);
 	}
 	
 	/**
@@ -106,21 +106,21 @@ public class CuentaPorcentaje extends CuentaCompartida{
 	 */
 	public void setPorcentajes(Map<Persona, Double> _percentages) {
 		validarPorcentajes(_percentages);
-		this.percentages = new HashMap<>(_percentages);
+		this.porcentajes = new HashMap<>(_percentages);
 		recalcularSaldos();
 	}
 	
 	@Override
 	public double calcularProporcion(Persona _person) {
 		validarPersonaEnCuenta(_person);
-		return percentages.getOrDefault(_person, 0.0) / 100.0;
+		return porcentajes.getOrDefault(_person, 0.0) / 100.0;
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("CuentaPorcentaje[id=%d, nombre=%s, gastoTotal=%.2f€, ", 
-				getID(), getNombre(), getGastoTotal()));
+				getID(), getNombre(), calcularGastoTotal()));
 		sb.append("porcentajes={");
 		
 		boolean first = true;

@@ -8,10 +8,10 @@ import java.util.Objects;
  */
 
 public class Categoria {
-	private static int counterID = 0;
+	private static int contadorID = 0;
 	
 	private int id;
-	private String name;
+	private String nombre;
 	private boolean base;
 	
 	/**
@@ -24,8 +24,8 @@ public class Categoria {
 		if (_name == null || _name.trim().isEmpty()) {
 			throw new IllegalArgumentException("El nombre no puede ser null ni vacío");
 		}
-		this.id = ++counterID;
-		this.name = _name.trim();
+		this.id = ++contadorID;
+		this.nombre = _name.trim();
 		this.base = _base;
 	}
 	
@@ -45,7 +45,7 @@ public class Categoria {
 	}
 	
 	public String getNombre() {
-		return name;
+		return nombre;
 	}
 	
 	public boolean isBase() {
@@ -55,23 +55,33 @@ public class Categoria {
 	/**
 	 * Permite modificar el nombre de categorias no base
 	 * @param _name Nuevo nombre
-	 * @throws IllegalStateException si la categoria no es base
-	 * @throws IllegalArgumentException si el nombre es null o vacío
 	 */
 	public void setNombre(String _name) {
+		this.nombre = _name.trim();
+	}
+	
+	/**
+	 * Intenta cambiar nombre de categoría.
+	 * @param _name
+	 * @return 	0 en cambio exitoso
+	 * 		   -1 si nombre inválido (null o vacío)
+	 *         -2 si la categoría no se puede modificar 
+	 */
+	public int cambiarNombre(String _name) {
 		if (base) {
-			throw new IllegalStateException("No se puede modificar categorías predefinidas");
+			return -2;
 		}
 		if (_name == null || _name.trim().isEmpty()) {
-			throw new IllegalArgumentException("El nombre no puede ser null ni vacío");
+			return -1;
 		}
-		this.name = _name.trim();
+		setNombre(_name);
+		return 0;
 	}
 	
 	protected void setID(int _id) {
 		this.id = _id;
-		if (_id >= counterID) {
-			counterID = _id;
+		if (_id >= contadorID) {
+			contadorID = _id;
 		}
 	}
 	
@@ -80,11 +90,11 @@ public class Categoria {
 	}
 	
 	public static void resetContador() {
-		counterID = 0;
+		contadorID = 0;
 	}
 	
 	public static void setContador(int _counter) {
-		counterID = _counter;
+		contadorID = _counter;
 	}
 	
 	@Override
@@ -102,6 +112,6 @@ public class Categoria {
 	
 	@Override 
 	public String toString() {
-		return name + (base ? " (predefinida)" : "");
+		return nombre + (base ? " (predefinida)" : "");
 	}
 }

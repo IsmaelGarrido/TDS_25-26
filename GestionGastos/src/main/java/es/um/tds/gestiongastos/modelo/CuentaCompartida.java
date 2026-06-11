@@ -12,10 +12,10 @@ public abstract class CuentaCompartida {
 	private static int counterID = 0;
 	
 	protected int id;
-	protected String name;
-	protected List<Persona> people;
-	protected List<Gasto> expenses;
-	protected Map<Persona, Double> balances;
+	protected String nombre;
+	protected List<Persona> personas;
+	protected List<Gasto> gastos;
+	protected Map<Persona, Double> saldos;
 	
 	/**
 	 * Constructor de CuentaCompartida
@@ -28,13 +28,13 @@ public abstract class CuentaCompartida {
 		validarPersonas(_people);
 		
 		this.id = ++counterID;
-		this.name = _name.trim();
-		this.people = new ArrayList<>(_people);
-		this.expenses = new ArrayList<>();
-		this.balances = new HashMap<>();
+		this.nombre = _name.trim();
+		this.personas = new ArrayList<>(_people);
+		this.gastos = new ArrayList<>();
+		this.saldos = new HashMap<>();
 		
-		for (Persona p : this.people) {
-			balances.put(p,  0.0);
+		for (Persona p : this.personas) {
+			saldos.put(p,  0.0);
 		}
 	}
 	
@@ -49,9 +49,9 @@ public abstract class CuentaCompartida {
 	}
 	
 	protected CuentaCompartida() {
-		this.people = new ArrayList<>();
-		this.expenses = new ArrayList<>();
-		this.balances = new HashMap<>();
+		this.personas = new ArrayList<>();
+		this.gastos = new ArrayList<>();
+		this.saldos = new HashMap<>();
 	}
 	
 	private void validarNombre(String _name) {
@@ -67,7 +67,7 @@ public abstract class CuentaCompartida {
 	}
 	
 	protected void validarPersonaEnCuenta(Persona _person) {
-		if (_person == null || !people.contains(_person)) {
+		if (_person == null || !personas.contains(_person)) {
 			throw new IllegalArgumentException("La persona no pertenece a esta cuenta");
 		}
 	}
@@ -77,19 +77,19 @@ public abstract class CuentaCompartida {
 	}
 	
 	public String getNombre() {
-		return name;
+		return nombre;
 	}
 	
 	public List<Persona> getPersonas(){
-		return Collections.unmodifiableList(people);
+		return Collections.unmodifiableList(personas);
 	}
 	
 	public List<Gasto> getGastos(){
-		return Collections.unmodifiableList(expenses);
+		return Collections.unmodifiableList(gastos);
 	}
 	
-	public int getNumPersonas() {
-		return people.size();
+	public int calcularNumPersonas() {
+		return personas.size();
 	}
 	
 	/**
@@ -99,17 +99,17 @@ public abstract class CuentaCompartida {
 	 * @return Saldo de la persona.
 	 * @throws IllegalArgumentException si la persona no está en la cuenta.
 	 */
-	public double getSaldo(Persona _person) {
+	public double calcularGasto(Persona _person) {
 		validarPersonaEnCuenta(_person);
-		return balances.getOrDefault(_person, 0.0);
+		return saldos.getOrDefault(_person, 0.0);
 	}
 	
 	public Map<Persona, Double> getSaldos(){
-		return new HashMap<>(balances);
+		return new HashMap<>(saldos);
 	}
 	
-	public double getGastoTotal() {
-		return expenses.stream().mapToDouble(Gasto::getCantidad).sum();
+	public double calcularGastoTotal() {
+		return gastos.stream().mapToDouble(Gasto::getCantidad).sum();
 	}
 	
 	/**
@@ -119,7 +119,7 @@ public abstract class CuentaCompartida {
 	 */
 	public void setNombre(String _name) {
 		validarNombre(_name);
-		this.name = _name.trim();
+		this.nombre = _name.trim();
 	}
 	
 	protected void setID(int _ID) {
@@ -130,15 +130,15 @@ public abstract class CuentaCompartida {
 	}
 	
 	protected void setPersonas(List<Persona> _people) {
-		this.people = new ArrayList<>(_people);
+		this.personas = new ArrayList<>(_people);
 	}
 	
 	protected void setGastos(List<Gasto> _expenses) {
-		this.expenses = new ArrayList<>(_expenses);
+		this.gastos = new ArrayList<>(_expenses);
 	}
 	
 	protected void setSaldos(Map<Persona, Double> _balances) {
-		this.balances = new HashMap<>(_balances);
+		this.saldos = new HashMap<>(_balances);
 	}
 	
 	/**
@@ -154,7 +154,7 @@ public abstract class CuentaCompartida {
 		validarPersonaEnCuenta(_payer);
 		
 		_expense.setPagador(_payer);
-		expenses.add(_expense);
+		gastos.add(_expense);
 		
 		actualizarSaldos(_expense, _payer);
 	}
@@ -162,35 +162,35 @@ public abstract class CuentaCompartida {
 	private void actualizarSaldos(Gasto _expense, Persona _payer) {
 		double amount = _expense.getCantidad();
 		
-		for (Persona person: people) {
+		for (Persona person: personas) {
 			double proportion = calcularProporcion(person);
 			double debt = amount * proportion;
 			
 			if (person.equals(_payer)) {
 				double received = amount - debt;
-				balances.merge(person, received, Double::sum);
+				saldos.merge(person, received, Double::sum);
 			} else {
-				balances.merge(person,  -debt, Double::sum);
+				saldos.merge(person,  -debt, Double::sum);
 			}
 		}
 	}
 	
 	public boolean removeGasto(Gasto _expense) {
-		if (_expense == null || !expenses.contains(_expense)) {
+		if (_expense == null || !gastos.contains(_expense)) {
 			return false;
 		}
 		
-		expenses.remove(_expense);
+		gastos.remove(_expense);
 		recalcularSaldos();
 		return true;
 	}
 	
 	protected void recalcularSaldos() {
-		for (Persona p : people) {
-			balances.put(p, 0.0);
+		for (Persona p : personas) {
+			saldos.put(p, 0.0);
 		}
 		
-		for (Gasto expense: expenses) {
+		for (Gasto expense: gastos) {
 			expense.getPagador().ifPresent(pagador -> actualizarSaldos(expense, pagador));
 		}
 	}
@@ -198,7 +198,7 @@ public abstract class CuentaCompartida {
 	public abstract double calcularProporcion(Persona _person);
 	
 	public boolean contienePersona(Persona _person) {
-		return people.contains(_person);
+		return personas.contains(_person);
 	}
 	
 	public static void resetContador() {
@@ -225,7 +225,7 @@ public abstract class CuentaCompartida {
 	@Override
 	public String toString() {
 		return String.format("CuentaCompartida [id=%d, nombre=%s, personas=%d, gastoTotal=%.2f€]",
-					id, name, people.size(), getGastoTotal());
+					id, nombre, personas.size(), calcularGastoTotal());
 	}
 }
 

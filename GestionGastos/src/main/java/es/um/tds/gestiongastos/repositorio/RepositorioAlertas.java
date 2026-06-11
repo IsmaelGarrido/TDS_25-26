@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
  */
 public class RepositorioAlertas {
 	
-	private static RepositorioAlertas instance;
+	private static RepositorioAlertas instancia;
 	
-	private List<Alerta> alerts;
+	private List<Alerta> alertas;
 	
 	/**
 	 * Constructor privado (Singleton)
 	 */
 	private RepositorioAlertas() {
-		this.alerts = new ArrayList<>();
+		this.alertas = new ArrayList<>();
 	}
 	
 	/**
@@ -31,10 +31,10 @@ public class RepositorioAlertas {
      * @return Instancia del repositorio
      */
 	public static synchronized RepositorioAlertas getInstance() {
-		if (instance == null) {
-			instance = new RepositorioAlertas();
+		if (instancia == null) {
+			instancia = new RepositorioAlertas();
 		}
-		return instance;
+		return instancia;
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class RepositorioAlertas {
      * @return Lista de todas las alertas
      */
 	public List<Alerta> getTotalAlertas(){
-		return new ArrayList<>(alerts);
+		return new ArrayList<>(alertas);
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public class RepositorioAlertas {
      * @return Optional con la alerta si existe
      */
     public Optional<Alerta> getAlertaByID(int _ID) {
-        return alerts.stream()
+        return alertas.stream()
                 .filter(a -> a.getID() == _ID)
                 .findFirst();
     }
@@ -68,7 +68,7 @@ public class RepositorioAlertas {
         
         // Verificar si ya existe
         if (getAlertaByID(_alert.getID()).isEmpty()) {
-            alerts.add(_alert);
+            alertas.add(_alert);
         }
     }
     
@@ -81,7 +81,7 @@ public class RepositorioAlertas {
         if (_alert == null) {
             return false;
         }
-        return alerts.remove(_alert);
+        return alertas.remove(_alert);
     }
     
     /**
@@ -99,8 +99,8 @@ public class RepositorioAlertas {
      * @return Lista de alertas activas
      */
     public List<Alerta> getAlertasActivas() {
-        return alerts.stream()
-                .filter(Alerta::isActiva)
+        return alertas.stream()
+                .filter(Alerta::getActiva)
                 .collect(Collectors.toList());
     }
     
@@ -113,7 +113,7 @@ public class RepositorioAlertas {
         if (_type == null) {
             return new ArrayList<>();
         }
-        return alerts.stream()
+        return alertas.stream()
                 .filter(a -> a.getTipoAlerta() == _type)
                 .collect(Collectors.toList());
     }
@@ -124,7 +124,7 @@ public class RepositorioAlertas {
      * @return Lista de alertas de esa categoría
      */
     public List<Alerta> getAlertasByCategoria(Categoria _category) {
-        return alerts.stream()
+        return alertas.stream()
                 .filter(a -> {
                     if (_category == null) {
                         return a.esGeneral();
@@ -141,7 +141,7 @@ public class RepositorioAlertas {
      * @return Lista de alertas generales
      */
     public List<Alerta> getAlertasGenerales() {
-        return alerts.stream()
+        return alertas.stream()
                 .filter(Alerta::esGeneral)
                 .collect(Collectors.toList());
     }
@@ -151,7 +151,7 @@ public class RepositorioAlertas {
      * @return Número de alertas
      */
     public int count() {
-        return alerts.size();
+        return alertas.size();
     }
     
     /**
@@ -159,8 +159,8 @@ public class RepositorioAlertas {
      * @return Número de alertas activas
      */
     public int countActivas() {
-        return (int) alerts.stream()
-                .filter(Alerta::isActiva)
+        return (int) alertas.stream()
+                .filter(Alerta::getActiva)
                 .count();
     }
     
@@ -169,7 +169,7 @@ public class RepositorioAlertas {
      * Reinicia el repositorio.
      */
     public void reset() {
-        alerts.clear();
+        alertas.clear();
         Alerta.resetContador();
     }
     
@@ -177,6 +177,6 @@ public class RepositorioAlertas {
      * Reinicia la instancia del Singleton.
      */
     public static synchronized void resetInstance() {
-        instance = null;
+        instancia = null;
     }
 }

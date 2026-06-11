@@ -14,15 +14,15 @@ import java.util.stream.Collectors;
  * Gestiona las notificaciones generadas por las alertas.
  */
 public class HistorialNotificaciones {
-	private static HistorialNotificaciones instance;
+	private static HistorialNotificaciones instancia;
 	
-	private List<Notificacion> notifications;
+	private List<Notificacion> notificaciones;
 	
 	/**
      * Constructor privado (Singleton).
      */
     private HistorialNotificaciones() {
-        this.notifications = new ArrayList<>();
+        this.notificaciones = new ArrayList<>();
     }
     
     /**
@@ -30,10 +30,10 @@ public class HistorialNotificaciones {
      * @return Instancia del historial
      */
     public static synchronized HistorialNotificaciones getInstance() {
-        if (instance == null) {
-            instance = new HistorialNotificaciones();
+        if (instancia == null) {
+            instancia = new HistorialNotificaciones();
         }
-        return instance;
+        return instancia;
     }
     
     /**
@@ -45,7 +45,7 @@ public class HistorialNotificaciones {
         if (_notification == null) {
             throw new IllegalArgumentException("La notificación no puede ser null");
         }
-        notifications.add(_notification);
+        notificaciones.add(_notification);
     }
     
     /**
@@ -53,7 +53,7 @@ public class HistorialNotificaciones {
      * @return Lista de todas las notificaciones
      */
     public List<Notificacion> getNotificaciones() {
-        return new ArrayList<>(notifications);
+        return new ArrayList<>(notificaciones);
     }
     
     /**
@@ -61,7 +61,7 @@ public class HistorialNotificaciones {
      * @return Lista ordenada de notificaciones
      */
     public List<Notificacion> getNotificacionesOrdenadas() {
-        return notifications.stream()
+        return notificaciones.stream()
                 .sorted(Comparator.comparing(Notificacion::getFecha).reversed())
                 .collect(Collectors.toList());
     }
@@ -72,7 +72,7 @@ public class HistorialNotificaciones {
      * @return Optional con la notificación si existe
      */
     public Optional<Notificacion> getNotificacionById(int _ID) {
-        return notifications.stream()
+        return notificaciones.stream()
                 .filter(n -> n.getID() == _ID)
                 .findFirst();
     }
@@ -82,8 +82,8 @@ public class HistorialNotificaciones {
      * @return Lista de notificaciones no leídas
      */
     public List<Notificacion> getNoLeidas() {
-        return notifications.stream()
-                .filter(n -> !n.isRead())
+        return notificaciones.stream()
+                .filter(n -> !n.esLeida())
                 .collect(Collectors.toList());
     }
     
@@ -92,8 +92,8 @@ public class HistorialNotificaciones {
      * @return Lista de notificaciones leídas
      */
     public List<Notificacion> getNotificacionesLeidas() {
-        return notifications.stream()
-                .filter(Notificacion::isRead)
+        return notificaciones.stream()
+                .filter(Notificacion::esLeida)
                 .collect(Collectors.toList());
     }
     
@@ -101,7 +101,7 @@ public class HistorialNotificaciones {
      * Marca todas las notificaciones como leídas.
      */
     public void marcarTodasNotificacionesComoLeidas() {
-        notifications.forEach(Notificacion::marcarLeida);
+        notificaciones.forEach(Notificacion::marcarLeida);
     }
     
     /**
@@ -113,7 +113,7 @@ public class HistorialNotificaciones {
         if (_notification == null) {
             return false;
         }
-        return notifications.remove(_notification);
+        return notificaciones.remove(_notification);
     }
     
     /**
@@ -122,7 +122,7 @@ public class HistorialNotificaciones {
      */
     public int removeNotificacionesLeidas() {
         List<Notificacion> leidas = getNotificacionesLeidas();
-        notifications.removeAll(leidas);
+        notificaciones.removeAll(leidas);
         return leidas.size();
     }
     
@@ -131,7 +131,7 @@ public class HistorialNotificaciones {
      * @return Número de notificaciones
      */
     public int count() {
-        return notifications.size();
+        return notificaciones.size();
     }
     
     /**
@@ -139,8 +139,8 @@ public class HistorialNotificaciones {
      * @return Número de no leídas
      */
     public int countNoLeidas() {
-        return (int) notifications.stream()
-                .filter(n -> !n.isRead())
+        return (int) notificaciones.stream()
+                .filter(n -> !n.esLeida())
                 .count();
     }
     
@@ -149,8 +149,8 @@ public class HistorialNotificaciones {
      * @return true si hay no leídas
      */
     public boolean hayNoLeidas() {
-        return notifications.stream()
-                .anyMatch(n -> !n.isRead());
+        return notificaciones.stream()
+                .anyMatch(n -> !n.esLeida());
     }
     
     
@@ -158,7 +158,7 @@ public class HistorialNotificaciones {
      * Reinicia el historial (para testing).
      */
     public void reset() {
-        notifications.clear();
+        notificaciones.clear();
         Notificacion.resetContador();
     }
     
@@ -166,6 +166,6 @@ public class HistorialNotificaciones {
      * Reinicia la instancia del Singleton.
      */
     public static synchronized void resetInstance() {
-        instance = null;
+        instancia = null;
     }
 }

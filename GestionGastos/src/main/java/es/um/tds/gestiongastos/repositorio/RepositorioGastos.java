@@ -17,31 +17,31 @@ import java.util.stream.Collectors;
  */
 public class RepositorioGastos {
 	
-	private static RepositorioGastos instance;
+	private static RepositorioGastos instancia;
 	
-	private List<Gasto> expenses;
+	private List<Gasto> gastos;
 	
 	/**
 	 * Constructor privado (Singleton).
 	 */
 	private RepositorioGastos() {
-		this.expenses = new ArrayList<>();
+		this.gastos = new ArrayList<>();
 	}
 	
 	public static synchronized RepositorioGastos getInstance() {
-		if (instance == null) {
-			instance = new RepositorioGastos();
+		if (instancia == null) {
+			instancia = new RepositorioGastos();
 		}
 		
-		return instance;
+		return instancia;
 	}
 	
 	public List<Gasto> getTodosGastos(){
-		return new ArrayList<>(expenses);
+		return new ArrayList<>(gastos);
 	}
 	
 	public Optional<Gasto> getGastoByID(int _ID){
-		return expenses.stream()
+		return gastos.stream()
 				.filter(g -> g.getID() == _ID)
 				.findFirst();
 	}
@@ -57,7 +57,7 @@ public class RepositorioGastos {
 		}
 		
 		if (getGastoByID(_expense.getID()).isEmpty()) {
-			expenses.add(_expense);
+			gastos.add(_expense);
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class RepositorioGastos {
 			return false;
 		}
 		
-		return expenses.remove(_expense);
+		return gastos.remove(_expense);
 	}
 	
 	public boolean deleteGastoByID(int _ID) {
@@ -78,7 +78,7 @@ public class RepositorioGastos {
 		if (_filter == null || !_filter.tieneFiltros()) {
 			return getTodosGastos();
 		}
-		return _filter.aplicarFiltros(expenses);
+		return _filter.aplicarFiltros(gastos);
 	}
 	
 	public List<Gasto> getGastosByCategoria(Categoria _category){
@@ -86,13 +86,13 @@ public class RepositorioGastos {
 			return new ArrayList<>();
 		}
 		
-		return expenses.stream()
+		return gastos.stream()
 				.filter(g -> g.getCategoria().equals(_category))
 				.collect(Collectors.toList());
 	}
 	
 	public List<Gasto> getGastosByRangoFechas(LocalDate _startDate, LocalDate _endDate){
-		return expenses.stream()
+		return gastos.stream()
 				.filter(g -> {
 					LocalDate date = g.getFecha().toLocalDate();
 					boolean afterStart = _startDate == null || !date.isBefore(_startDate);
@@ -103,19 +103,19 @@ public class RepositorioGastos {
 	}
 	
 	public List<Gasto> getGastosPersonales(){
-		return expenses.stream()
+		return gastos.stream()
 				.filter(Gasto::isPersonal)
 				.collect(Collectors.toList());
 	}
 	
 	public List<Gasto> getGastosCompartidos(){
-		return expenses.stream()
+		return gastos.stream()
 				.filter(g -> !g.isPersonal())
 				.collect(Collectors.toList());
 	}
 	
 	public double calcularTotal() {
-		return expenses.stream()
+		return gastos.stream()
 				.mapToDouble(Gasto::getCantidad)
 				.sum();
 	}
@@ -127,15 +127,15 @@ public class RepositorioGastos {
 	}
 	
 	public int count() {
-		return expenses.size();
+		return gastos.size();
 	}
 	
 	public void reset() {
-		expenses.clear();
+		gastos.clear();
 		Gasto.resetContador();
 	}
 	
 	public static synchronized void resetInstance() {
-		instance = null;
+		instancia = null;
 	}
 }
