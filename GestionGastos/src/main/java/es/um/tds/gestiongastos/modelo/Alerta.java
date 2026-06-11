@@ -191,7 +191,7 @@ public class Alerta {
 		sb.append("¡Alerta! Has superado el tope de gasto ");
 		sb.append(typeAlert.getDescripcion().toLowerCase());
 		
-		getCategoria().ifPresent(cat -> sb.append(" en la cateogria '").append(cat.getNombre()).append("'"));
+		getCategoria().ifPresent(cat -> sb.append(" en la categoria '").append(cat.getNombre()).append("'"));
 	
 		sb.append(String.format(". Tope: %.2f€, Gasto actual: %.2f€", maxExpense, _currentExpense));
 		
