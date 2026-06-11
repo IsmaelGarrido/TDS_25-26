@@ -99,7 +99,7 @@ public abstract class CuentaCompartida {
 	 * @return Saldo de la persona.
 	 * @throws IllegalArgumentException si la persona no está en la cuenta.
 	 */
-	public double calcularGasto(Persona _person) {
+	public double calcularSaldo(Persona _person) {
 		validarPersonaEnCuenta(_person);
 		return saldos.getOrDefault(_person, 0.0);
 	}

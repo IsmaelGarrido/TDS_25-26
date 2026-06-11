@@ -36,7 +36,7 @@ class TestCuentaEquitativa {
         CuentaEquitativa account = new CuentaEquitativa("Piso", raquel, luis, maria);
         
         assertEquals("Piso", account.getNombre());
-        assertEquals(3, account.getNumPersonas());
+        assertEquals(3, account.calcularNumPersonas());
         assertTrue(account.contienePersona(raquel));
         assertTrue(account.contienePersona(luis));
         assertTrue(account.contienePersona(maria));
@@ -49,7 +49,7 @@ class TestCuentaEquitativa {
         CuentaEquitativa account = new CuentaEquitativa("Vacaciones", people);
         
         assertEquals("Vacaciones", account.getNombre());
-        assertEquals(2, account.getNumPersonas());
+        assertEquals(2, account.calcularNumPersonas());
     }
     
     @Test
@@ -111,10 +111,10 @@ class TestCuentaEquitativa {
         account.addGasto(expense, raquel);
         
         // Raquel pagó 30€, su parte es 10€, le deben 20€
-        assertEquals(20.0, account.getSaldo(raquel), 0.01);
+        assertEquals(20.0, account.calcularSaldo(raquel), 0.01);
         // Luis y María deben 10€ cada uno
-        assertEquals(-10.0, account.getSaldo(luis), 0.01);
-        assertEquals(-10.0, account.getSaldo(maria), 0.01);
+        assertEquals(-10.0, account.calcularSaldo(luis), 0.01);
+        assertEquals(-10.0, account.calcularSaldo(maria), 0.01);
     }
     
     @Test
@@ -129,9 +129,9 @@ class TestCuentaEquitativa {
         
         // Total: 150€, cada uno debe 75€
         // Raquel pagó 100€, le deben 25€
-        assertEquals(25.0, account.getSaldo(raquel), 0.01);
+        assertEquals(25.0, account.calcularSaldo(raquel), 0.01);
         // Luis pagó 50€, debe 25€
-        assertEquals(-25.0, account.getSaldo(luis), 0.01);
+        assertEquals(-25.0, account.calcularSaldo(luis), 0.01);
     }
     
     @Test
@@ -142,7 +142,7 @@ class TestCuentaEquitativa {
         account.addGasto(new Gasto(100.0, category), raquel);
         account.addGasto(new Gasto(50.0, category), luis);
         
-        assertEquals(150.0, account.getGastoTotal(), 0.01);
+        assertEquals(150.0, account.calcularGastoTotal(), 0.01);
     }
     
     @Test
@@ -152,11 +152,11 @@ class TestCuentaEquitativa {
         Gasto expense = new Gasto(100.0, category);
         
         account.addGasto(expense, raquel);
-        assertEquals(50.0, account.getSaldo(raquel), 0.01);
+        assertEquals(50.0, account.calcularSaldo(raquel), 0.01);
         
         account.removeGasto(expense);
-        assertEquals(0.0, account.getSaldo(raquel), 0.01);
-        assertEquals(0.0, account.getSaldo(luis), 0.01);
+        assertEquals(0.0, account.calcularSaldo(raquel), 0.01);
+        assertEquals(0.0, account.calcularSaldo(luis), 0.01);
     }
     
     @Test

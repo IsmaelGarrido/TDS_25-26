@@ -135,11 +135,11 @@ class TestCuentaPorcentaje {
         account.addGasto(expense, raquel);
         
         // Raquel pagó 100€, su parte es 40€, le deben 60€
-        assertEquals(60.0, account.getSaldo(raquel), 0.01);
+        assertEquals(60.0, account.calcularSaldo(raquel), 0.01);
         // Luis debe 30€
-        assertEquals(-30.0, account.getSaldo(luis), 0.01);
+        assertEquals(-30.0, account.calcularSaldo(luis), 0.01);
         // María debe 30€
-        assertEquals(-30.0, account.getSaldo(maria), 0.01);
+        assertEquals(-30.0, account.calcularSaldo(maria), 0.01);
     }
     
     @Test
@@ -157,9 +157,9 @@ class TestCuentaPorcentaje {
         account.addGasto(new Gasto(100.0, category), luis);
         
         // Luis pagó 100€, su parte es 30€, le deben 70€
-        assertEquals(70.0, account.getSaldo(luis), 0.01);
+        assertEquals(70.0, account.calcularSaldo(luis), 0.01);
         // Raquel debe 70€
-        assertEquals(-70.0, account.getSaldo(raquel), 0.01);
+        assertEquals(-70.0, account.calcularSaldo(raquel), 0.01);
     }
     
     @Test
@@ -169,7 +169,7 @@ class TestCuentaPorcentaje {
         account.addGasto(new Gasto(100.0, category), raquel);
         
         // Con 50-50: Raquel le deben 50€
-        assertEquals(50.0, account.getSaldo(raquel), 0.01);
+        assertEquals(50.0, account.calcularSaldo(raquel), 0.01);
         
         // Cambiar a 70-30
         Map<Persona, Double> newPercentages = Map.of(
@@ -179,8 +179,8 @@ class TestCuentaPorcentaje {
         account.setPorcentajes(newPercentages);
         
         // Con 70-30: Raquel le deben 30€
-        assertEquals(30.0, account.getSaldo(raquel), 0.01);
-        assertEquals(-30.0, account.getSaldo(luis), 0.01);
+        assertEquals(30.0, account.calcularSaldo(raquel), 0.01);
+        assertEquals(-30.0, account.calcularSaldo(luis), 0.01);
     }
     
     @Test

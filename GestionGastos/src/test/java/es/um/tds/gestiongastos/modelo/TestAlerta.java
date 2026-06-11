@@ -44,7 +44,7 @@ class TestAlerta {
         
         assertEquals(100.0, alert.getMaxGasto());
         assertEquals(TipoAlerta.SEMANAL, alert.getTipoAlerta());
-        assertTrue(alert.isActiva());
+        assertTrue(alert.getActiva());
         assertTrue(alert.esGeneral());
         assertTrue(alert.getCategoria().isEmpty());
     }
@@ -164,13 +164,13 @@ class TestAlerta {
     @DisplayName("Activar y desactivar alerta")
     void activarDesactivarAlerta() {
         Alerta alert = new Alerta(100.0, TipoAlerta.SEMANAL);
-        assertTrue(alert.isActiva());
+        assertTrue(alert.getActiva());
         
         alert.desactivar();
-        assertFalse(alert.isActiva());
+        assertFalse(alert.getActiva());
         
         alert.activar();
-        assertTrue(alert.isActiva());
+        assertTrue(alert.getActiva());
     }
     
     @Test

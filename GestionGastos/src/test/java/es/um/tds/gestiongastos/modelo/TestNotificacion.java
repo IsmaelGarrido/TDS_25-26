@@ -24,7 +24,7 @@ class TestNotificacion {
     void crearNotificacionConMensaje() {
         Notificacion notif = new Notificacion("Mensaje de prueba");
         assertEquals("Mensaje de prueba", notif.getMensaje());
-        assertFalse(notif.isRead());
+        assertFalse(notif.esLeida());
         assertNotNull(notif.getFecha());
     }
     
@@ -53,10 +53,10 @@ class TestNotificacion {
     @DisplayName("Marcar notificación como leída")
     void marcarComoLeida() {
         Notificacion notif = new Notificacion("Mensaje");
-        assertFalse(notif.isRead());
+        assertFalse(notif.esLeida());
         
         notif.marcarLeida();
-        assertTrue(notif.isRead());
+        assertTrue(notif.esLeida());
     }
     
     @Test
@@ -64,10 +64,10 @@ class TestNotificacion {
     void marcarComoNoLeida() {
         Notificacion notif = new Notificacion("Mensaje");
         notif.marcarLeida();
-        assertTrue(notif.isRead());
+        assertTrue(notif.esLeida());
         
         notif.marcarNoLeida();
-        assertFalse(notif.isRead());
+        assertFalse(notif.esLeida());
     }
     
     @Test
