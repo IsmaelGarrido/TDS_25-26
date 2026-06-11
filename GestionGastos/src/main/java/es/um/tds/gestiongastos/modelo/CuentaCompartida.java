@@ -224,7 +224,7 @@ public abstract class CuentaCompartida {
 	
 	@Override
 	public String toString() {
-		return String.format("CuentaCompartida [id=%id, nombre=%s, personas=%d, gastoTotal=%.2f€]",
+		return String.format("CuentaCompartida [id=%d, nombre=%s, personas=%d, gastoTotal=%.2f€]",
 					id, name, people.size(), getGastoTotal());
 	}
 }

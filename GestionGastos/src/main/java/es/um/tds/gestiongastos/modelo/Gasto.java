@@ -137,7 +137,7 @@ public class Gasto {
 	}
 	
 	public void setMoneda(String _coin) {
-		this.coin = (_coin != null && !_coin.trim().isEmpty()) ? coin.trim() : "EUR";
+		this.coin = (_coin != null && !_coin.trim().isEmpty()) ? _coin.trim() : "EUR";
 	}
 	
 	public void setCategoria(Categoria _category) {
@@ -181,6 +181,6 @@ public class Gasto {
 	public String toString() {
 		String noteStr = getNota().orElse("sin nota");
 		return String.format("Gasto[id=%d, cantidad=%.2f %s, fecha=%s, categoria=%s, nota=%s]",
-								amount, coin, date.toLocalDate(), category.getNombre(), noteStr);
+								id, amount, coin, date.toLocalDate(), category.getNombre(), noteStr);
 	}
 }
