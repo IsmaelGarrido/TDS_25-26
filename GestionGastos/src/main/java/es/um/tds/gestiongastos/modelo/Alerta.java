@@ -1,8 +1,6 @@
 package es.um.tds.gestiongastos.modelo;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -43,8 +41,8 @@ public class Alerta {
 	
 	/**
 	 * Constructor sin categoria
-	 * @param _maxGasto Limite de gasto (positivo).
-	 * @param _typeAlerta Tipo de Alerta (no null).
+	 * @param _maxExpense Limite de gasto (positivo).
+	 * @param _typeAlert Tipo de Alerta (no null).
 	 */
 	public Alerta(double _maxExpense, TipoAlerta _typeAlert) {
 		this(_maxExpense, _typeAlert, null);
@@ -131,14 +129,20 @@ public class Alerta {
 	protected void setActiva(boolean _active) {
 		this.active = _active;
 	}
-	
+	/**
+	 * Calcula el gasto acumulado en el periodo actual de esta alerta.
+	 * Delega el cálculo del inicio en TipoAlerta (Strategy).
+	 * Filtra por categoría si la alerta no es general.
+	 * @param _expenses Lista de gastos a evaluar
+	 * @return Total de gastos en el periodo actual
+	 */
 	public double calcularGastoActual(List<Gasto> _expenses) {
 		if (_expenses == null || _expenses.isEmpty()) {
 			return 0.0;
 		}
 		
 		LocalDate today = LocalDate.now();
-		LocalDate startPeriod = calcularInicioPeriodo(today);
+		LocalDate startPeriod = typeAlert.calcularInicioPeriodo(today);
 		
 		return _expenses.stream()
 				.filter(g -> !g.getFecha().toLocalDate().isBefore(startPeriod))
@@ -148,17 +152,12 @@ public class Alerta {
 				.sum();
 	}
 	
-	private LocalDate calcularInicioPeriodo(LocalDate _currentDate) {
-		switch (typeAlert) {
-			case SEMANAL:
-				return _currentDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-			case MENSUAL:
-				return _currentDate.withDayOfMonth(1);
-			default:
-				return _currentDate;
-		}
-	}
-	
+	/**
+	 * Verifica si el gasto actual supera el tope configurado.
+	 * Una alerta desactivada nunca dispara.
+	 * @param _expenses Lista de gastos a evaluar
+	 * @return true si el gasto supera el tope y la alerta está activa
+	 */
 	public boolean verificar(List<Gasto> _expenses) {
 		if (!active) {
 			return false;
@@ -166,6 +165,11 @@ public class Alerta {
 		return calcularGastoActual(_expenses) > maxExpense;
 	}
 	
+	/**
+	 * Genera una notificación si el tope se supera.
+	 * @param _expenses Lista de gastos a evaluar
+	 * @return Optional con la notificación o vacío si no se supera el tope
+	 */
 	public Optional<Notificacion> generarNotificacion(List<Gasto> _expenses){
 		if(!verificar(_expenses)) {
 			return Optional.empty();
@@ -177,6 +181,11 @@ public class Alerta {
 		return Optional.of(new Notificacion(message));
 	}
 	
+	/**
+	 * Construye el mensaje de la notificación.
+	 * @param _currentExpense Gasto actual calculado
+	 * @return Mensaje formateado con tope y gasto actual
+	 */
 	public String construirMensajeNotificacion(double _currentExpense) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("¡Alerta! Has superado el tope de gasto ");
@@ -184,7 +193,7 @@ public class Alerta {
 		
 		getCategoria().ifPresent(cat -> sb.append(" en la cateogria '").append(cat.getNombre()).append("'"));
 	
-		sb.append(String.format(". Tope: %.€, Gasto actual: %.2f€", maxExpense, _currentExpense));
+		sb.append(String.format(". Tope: %.2f€, Gasto actual: %.2f€", maxExpense, _currentExpense));
 		
 		return sb.toString();
 	}

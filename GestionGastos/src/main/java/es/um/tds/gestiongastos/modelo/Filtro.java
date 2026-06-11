@@ -82,7 +82,7 @@ public class Filtro {
 	
 	public void addMes(Month _month) {
 		if (_month != null) {
-			if(months != null) {
+			if(months == null) {
 				months = new ArrayList<>();
 			}
 			if(!months.contains(_month)) {

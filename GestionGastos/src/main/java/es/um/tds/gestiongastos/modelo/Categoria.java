@@ -21,7 +21,7 @@ public class Categoria {
 	 * @throws IllegalArgumentException si el nombre es null o vacio
 	 */
 	public Categoria(String _name, boolean _base) {
-		if (_name == null || name.trim().isEmpty()) {
+		if (_name == null || _name.trim().isEmpty()) {
 			throw new IllegalArgumentException("El nombre no puede ser null ni vacío");
 		}
 		this.id = ++counterID;

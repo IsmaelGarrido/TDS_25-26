@@ -12,7 +12,7 @@ public class Persona {
 	 * @throws IllegalArgumentException
 	 */
 	public Persona(String _name) {
-		if(_name == null || name.trim().isEmpty()) {
+		if(_name == null || _name.trim().isEmpty()) {
 			throw new IllegalArgumentException("El nombre no puede ser null ni vacio");
 		}
 		this.name = _name.trim();

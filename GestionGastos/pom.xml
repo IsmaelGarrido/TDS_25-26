@@ -119,7 +119,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>es.um.tds.gestiongastos.MainApp</mainClass>
+                            <mainClass>es.um.tds.gestiongastos.vista.MainApp</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
