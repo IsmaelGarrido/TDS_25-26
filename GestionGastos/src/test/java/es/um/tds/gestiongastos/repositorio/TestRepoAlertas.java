@@ -83,7 +83,7 @@ class TestRepositorioAlertas {
         
         List<Alerta> actives = repo.getAlertasActivas();
         assertEquals(1, actives.size());
-        assertTrue(actives.get(0).isActiva());
+        assertTrue(actives.get(0).getActiva());
     }
     
     @Test

@@ -70,7 +70,7 @@ class TestHistorialNotificaciones {
         
         List<Notificacion> noLeidas = record.getNoLeidas();
         assertEquals(2, noLeidas.size());
-        assertTrue(noLeidas.stream().noneMatch(Notificacion::isRead));
+        assertTrue(noLeidas.stream().noneMatch(Notificacion::esLeida));
     }
     
     @Test
@@ -88,7 +88,7 @@ class TestHistorialNotificaciones {
         
         List<Notificacion> allRead = record.getNotificacionesLeidas();
         assertEquals(2, allRead.size());
-        assertTrue(allRead.stream().allMatch(Notificacion::isRead));
+        assertTrue(allRead.stream().allMatch(Notificacion::esLeida));
     }
     
     @Test
@@ -175,7 +175,7 @@ class TestHistorialNotificaciones {
         
         assertEquals(2, deleted);
         assertEquals(1, record.count());
-        assertFalse(record.getNotificaciones().get(0).isRead());
+        assertFalse(record.getNotificaciones().get(0).esLeida());
     }
     
     @Test
