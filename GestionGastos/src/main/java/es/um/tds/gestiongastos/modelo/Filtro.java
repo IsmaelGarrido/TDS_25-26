@@ -38,8 +38,9 @@ public class Filtro {
 	 */
 	public Filtro(List<Month> _months, LocalDate _startDate, LocalDate _endDate, List<Categoria> _categories) {
 		this.meses = (_months != null && !_months.isEmpty()) ? new ArrayList<>(_months) : null;
-		this.fechaInicio = _startDate;
-		this.fechaFin = _endDate;
+		this.fechaFin = null;
+		this.fechaInicio = null;
+		setRangoFechas(_startDate, _endDate);
 		this.categorias = (_categories != null && !_categories.isEmpty()) ? new ArrayList<>(_categories) : null;
 	}
 	
@@ -64,6 +65,11 @@ public class Filtro {
 	}
 	
 	public void setRangoFechas(LocalDate _startDate, LocalDate _endDate) {
+		if(_startDate != null && _endDate != null) {
+			if (_startDate.isAfter(_endDate)) {
+				return;
+			}
+		}
 		this.fechaInicio = _startDate;
 		this.fechaFin = _endDate;
 	}

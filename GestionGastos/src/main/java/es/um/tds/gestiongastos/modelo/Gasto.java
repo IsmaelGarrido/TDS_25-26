@@ -159,6 +159,18 @@ public class Gasto {
 		}
 	}
 	
+	public boolean actualizarGasto(Double _cantidad, LocalDateTime _fecha,
+            String _nota, String _metodoPago, Categoria _categoria, String _moneda) {
+		if (_cantidad != null && _cantidad <= 0) return false;
+		if (_cantidad != null) setCantidad(_cantidad);
+		if (_fecha != null) setFecha(_fecha);
+		if (_nota != null) setNota(_nota);
+		if (_metodoPago != null) setMetodoPago(_metodoPago);
+		if (_categoria != null) setCategoria(_categoria);
+		if (_moneda != null) setMoneda(_moneda);
+		return true;
+	}
+	
 	public static void resetContador() {
 		contadorID = 0;
 	}

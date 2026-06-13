@@ -9,6 +9,7 @@ import es.um.tds.gestiongastos.repositorio.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 import java.util.Map;
@@ -132,7 +133,7 @@ public class GestionGastos {
      * @param pagador Persona que pagó (null para gasto personal)
      * @return Gasto creado
      */
-    private Gasto registrarGastoCompartido(double cantidad, String nota, String metodoPago, Categoria categoria,
+    public Gasto registrarGastoCompartido(double cantidad, String nota, String metodoPago, Categoria categoria,
     										CuentaCompartida cuenta, Persona pagador) {        
         Gasto gasto = new Gasto(cantidad, java.time.LocalDateTime.now(), nota, metodoPago,
 				"EUR",  categoria, pagador);
@@ -142,6 +143,17 @@ public class GestionGastos {
 		repoGastos.addGasto(gasto);
 		verificarAlertas();
 		return gasto;
+    }
+    
+    public boolean editarGasto(Gasto gasto, Double cantidad, LocalDateTime fecha,
+    							String nota, String metodoPago, Categoria categoria, String moneda, Persona pagador) {
+    	if (gasto == null || repoGastos.getGastoByID(gasto.getID()).isEmpty()) {
+    		return false;
+    	}
+    	gasto.actualizarGasto(cantidad, fecha, nota, metodoPago, categoria, moneda);
+    	verificarAlertas();
+    	guardar();
+    	return true;
     }
     
     /**
@@ -414,6 +426,16 @@ public class GestionGastos {
             alerta.generarNotificacion(gastos)
                   .ifPresent(historialNotificaciones::addNotificacion);
         }
+    }
+    
+    public void activarAlerta(Alerta alerta) {
+    	alerta.activar();
+    	guardar();
+    }
+    
+    public void desactivarAlerta(Alerta alerta) {
+    	alerta.desactivar();
+    	guardar();
     }
     
     // ==================== GESTIÓN DE NOTIFICACIONES ====================

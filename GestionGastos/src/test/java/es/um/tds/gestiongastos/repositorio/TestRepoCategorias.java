@@ -50,6 +50,13 @@ class TestRepositorioCategorias {
     }
     
     @Test
+    @DisplayName("No se puede eliminar categoría predefinida")
+    void noEliminarPredefinida() {
+        Categoria predefinida = repo.getCategoriasPredefinidas().get(0);
+        assertThrows(IllegalStateException.class, () -> repo.deleteCategoria(predefinida));
+    }
+    
+    @Test
     @DisplayName("Guardar categoría personalizada")
     void guardarCategoriaPersonalizada() {
         int countInicial = repo.countCategorias();
@@ -77,13 +84,6 @@ class TestRepositorioCategorias {
     }
     
     @Test
-    @DisplayName("No se puede eliminar categoría predefinida")
-    void noEliminarPredefinida() {
-        Categoria predefinida = repo.getCategoriasPredefinidas().get(0);
-        assertThrows(IllegalStateException.class, () -> repo.deleteCategoria(predefinida));
-    }
-    
-    @Test
     @DisplayName("Eliminar categoría personalizada")
     void eliminarPersonalizada() {
         Categoria cat = new Categoria("Temporal");
@@ -102,6 +102,75 @@ class TestRepositorioCategorias {
         
         assertTrue(repo.deleteCategoriaByID(id));
         assertTrue(repo.getCategoriaByID(id).isEmpty());
+    }
+    
+    @Test
+    @DisplayName("editNameCategoria con éxito devuelve 0")
+    void editarNombreExito() {
+        Categoria cat = new Categoria("Mi categoría");
+        repo.addCategoria(cat);
+        assertEquals(0, repo.editNameCategoria(cat, "Nuevo nombre"));
+        assertEquals("Nuevo nombre", cat.getNombre());
+    }
+    
+    @Test
+    @DisplayName("editNameCategoria con nombre null devuelve -1")
+    void editarNombreNull() {
+        Categoria cat = new Categoria("Mi categoría");
+        repo.addCategoria(cat);
+        assertEquals(-1, repo.editNameCategoria(cat, null));
+        assertEquals("Mi categoría", cat.getNombre());
+    }
+    
+    @Test
+    @DisplayName("editNameCategoria con nombre vacío devuelve -1")
+    void editarNombreVacio() {
+        Categoria cat = new Categoria("Mi categoría");
+        repo.addCategoria(cat);
+        assertEquals(-1, repo.editNameCategoria(cat, "   "));
+        assertEquals("Mi categoría", cat.getNombre());
+    }
+    
+    @Test
+    @DisplayName("editNameCategoria en predefinida devuelve -2")
+    void editarNombrePredefinida() {
+        Categoria predefinida = repo.getCategoriasPredefinidas().get(0);
+        String nombreOriginal = predefinida.getNombre();
+        assertEquals(-2, repo.editNameCategoria(predefinida, "Otro"));
+        assertEquals(nombreOriginal, predefinida.getNombre());
+    }
+    
+    @Test
+    @DisplayName("editNameCategoria con categoría null devuelve -3")
+    void editarNombreCategoriaNull() {
+        assertEquals(-3, repo.editNameCategoria(null, "Nuevo"));
+    }
+    
+    @Test
+    @DisplayName("editNameCategoria con categoría no registrada devuelve -3")
+    void editarNombreCategoriaNoRegistrada() {
+        Categoria noRegistrada = new Categoria("No registrada");
+        assertEquals(-3, repo.editNameCategoria(noRegistrada, "Nuevo"));
+    }
+    
+    @Test
+    @DisplayName("editNameCategoria con nombre duplicado devuelve -4")
+    void editarNombreDuplicado() {
+        Categoria cat1 = new Categoria("Categoria1");
+        Categoria cat2 = new Categoria("Categoria2");
+        repo.addCategoria(cat1);
+        repo.addCategoria(cat2);
+        assertEquals(-4, repo.editNameCategoria(cat2, "Categoria1"));
+        assertEquals("Categoria2", cat2.getNombre());
+    }
+    
+    @Test
+    @DisplayName("nombre no cambia si editNameCategoria falla")
+    void nombreNoCambiaSiEditFalla() {
+        Categoria cat = new Categoria("Mi categoría");
+        repo.addCategoria(cat);
+        repo.editNameCategoria(cat, null);
+        assertEquals("Mi categoría", cat.getNombre());
     }
     
     @Test

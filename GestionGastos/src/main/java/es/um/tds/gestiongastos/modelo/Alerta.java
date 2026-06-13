@@ -19,6 +19,7 @@ public class Alerta {
 	private double maxGasto;
 	private TipoAlerta tipoAlerta;
 	private Categoria categoria;
+	private LocalDate ultimoDisparo;
 	private boolean activa;
 
 	/**
@@ -36,6 +37,7 @@ public class Alerta {
 		this.maxGasto = _maxExpense;
 		this.tipoAlerta = _typeAlert;
 		this.categoria = _category;
+		this.ultimoDisparo = null;
 		this.activa = true;
 	}
 	
@@ -175,6 +177,13 @@ public class Alerta {
 			return Optional.empty();
 		}
 		
+		LocalDate inicioPeriodo = tipoAlerta.calcularInicioPeriodo(LocalDate.now());
+		
+		if (ultimoDisparo != null && !ultimoDisparo.isBefore(inicioPeriodo)) {
+			return Optional.empty();
+		}
+		
+		ultimoDisparo = LocalDate.now();
 		double currentGasto = calcularGastoActual(_expenses);
 		String message = construirMensajeNotificacion(currentGasto);
 		
