@@ -26,7 +26,6 @@ public class DatosAplicacion {
 	private List<Alerta> alerts;
 	private List<Notificacion> notifications;
 	
-	// Contadores para restaurar el estado de los ID.
 	private int counterCategory;
 	private int counterExpense;
 	private int counterAccount;

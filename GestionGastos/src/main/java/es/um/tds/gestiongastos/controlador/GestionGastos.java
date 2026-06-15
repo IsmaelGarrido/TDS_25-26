@@ -215,6 +215,30 @@ public class GestionGastos {
     public double getTotalGastos(Filtro filtro) {
         return repoGastos.calcularTotal(filtro);
     }
+
+    /**
+     * Obtiene el gasto personal (sin cuenta) del mes y año actuales.
+     * Centraliza la lógica de filtrado para no duplicarla en la vista.
+     * @return Total de gasto personal del mes en curso
+     */
+    public double getGastoPersonalMesActual() {
+        LocalDate hoy = LocalDate.now();
+        return getGastosPersonales().stream()
+            .filter(g -> g.getFecha().getMonth() == hoy.getMonth()
+                      && g.getFecha().getYear()  == hoy.getYear())
+            .mapToDouble(Gasto::getCantidad)
+            .sum();
+    }
+
+    /**
+     * Obtiene el total de gastos sumados en todas las cuentas compartidas.
+     * @return Suma de calcularGastoTotal() de cada cuenta
+     */
+    public double getTotalGastosEnCuentas() {
+        return getCuentas().stream()
+            .mapToDouble(CuentaCompartida::calcularGastoTotal)
+            .sum();
+    }
     
     // ==================== GESTIÓN DE CATEGORÍAS ====================
     
@@ -327,6 +351,54 @@ public class GestionGastos {
         CuentaPorcentaje cuenta = new CuentaPorcentaje(nombre, personas, porcentajes);
         repoCuentas.addCuenta(cuenta);
         return cuenta;
+    }
+
+    /**
+     * Crea una cuenta equitativa a partir de una lista de nombres (Strings).
+     * El controlador instancia los objetos Persona (patrón Creador).
+     * @param nombre Nombre de la cuenta
+     * @param nombresPersonas Lista de nombres (mínimo 2)
+     * @return Cuenta creada
+     */
+    /**
+     * Crea una cuenta equitativa a partir de una lista de nombres (Strings).
+     * El controlador instancia los objetos Persona (patrón Creador).
+     * @param nombre Nombre de la cuenta
+     * @param nombresPersonas Lista de nombres (mínimo 2)
+     * @return Cuenta creada
+     */
+    public CuentaEquitativa crearCuentaEquitativaDesdeNombres(String nombre,
+            List<String> nombresPersonas) {
+        List<Persona> personas = nombresPersonas.stream()
+            .filter(n -> n != null && !n.isBlank())
+            .map(n -> new Persona(n.trim()))
+            .collect(Collectors.toList());
+        return crearCuentaEquitativa(nombre, personas);
+    }
+
+    /**
+     * Crea una cuenta por porcentajes a partir de nombres y porcentajes como Strings.
+     * El controlador instancia los objetos Persona (patrón Creador).
+     * @param nombre Nombre de la cuenta
+     * @param nombresPersonas Lista de nombres
+     * @param porcentajesPorNombre Mapa nombre → porcentaje (deben sumar 100)
+     * @return Cuenta creada
+     */
+    public CuentaPorcentaje crearCuentaPorcentajeDesdeNombres(String nombre,
+            List<String> nombresPersonas,
+            Map<String, Double> porcentajesPorNombre) {
+        List<Persona> personas = nombresPersonas.stream()
+            .filter(n -> n != null && !n.isBlank())
+            .map(n -> new Persona(n.trim()))
+            .collect(Collectors.toList());
+        Map<Persona, Double> porcentajes = new java.util.LinkedHashMap<>();
+        for (Persona p : personas) {
+            Double pct = porcentajesPorNombre.get(p.getNombre());
+            if (pct == null) throw new IllegalArgumentException(
+                "Falta el porcentaje para: " + p.getNombre());
+            porcentajes.put(p, pct);
+        }
+        return crearCuentaPorcentaje(nombre, personas, porcentajes);
     }
     
     /**
@@ -510,11 +582,27 @@ public class GestionGastos {
     public boolean puedeImportar(String rutaArchivo) {
         return FactoriaImportadores.getInstance().existeImportador(rutaArchivo);
     }
+
+    /**
+     * Previsualiza los gastos de un fichero SIN añadirlos al repositorio.
+     * Permite mostrar una vista previa antes de confirmar la importación.
+     * @param rutaArchivo Ruta del archivo
+     * @return Lista de gastos leídos (no persistidos)
+     * @throws IOException si hay error de lectura
+     * @throws ImportacionException si hay error de formato
+     */
+    public List<Gasto> previsualizarGastos(String rutaArchivo)
+            throws IOException, ImportacionException {
+        FactoriaImportadores factoria = FactoriaImportadores.getInstance();
+        ImportadorGastos importador = factoria.getImportador(rutaArchivo);
+        return importador.importar(rutaArchivo);
+        // No se llama a repoGastos.addGasto() ni a verificarAlertas()
+    }
     
     // ==================== ESTADÍSTICAS ====================
     
     /**
-     * Obtiene el gasto total por categoría.
+     * Obtiene el gasto total por categoría (todos los gastos).
      * @return Mapa de categoría a total
      */
     public Map<Categoria, Double> getGastosPorCategoriaAgrupados() {
@@ -523,6 +611,19 @@ public class GestionGastos {
                     Gasto::getCategoria,
                     Collectors.summingDouble(Gasto::getCantidad)
                 ));
+    }
+
+    /**
+     * Agrupa una lista de gastos ya filtrados por nombre de categoría.
+     * La vista pasa los gastos filtrados; el controlador aplica la agregación.
+     * @param gastos Lista de gastos a agrupar (puede ser un subconjunto filtrado)
+     * @return Mapa de nombre de categoría → total
+     */
+    public Map<String, Double> getGastosPorCategoriaAgrupados(List<Gasto> gastos) {
+        return gastos.stream()
+            .collect(Collectors.groupingBy(
+                g -> g.getCategoria().getNombre(),
+                Collectors.summingDouble(Gasto::getCantidad)));
     }
     
     /**

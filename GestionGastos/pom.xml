@@ -114,7 +114,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>es.um.tds.gestiongastos.MainApp</mainClass>
+                    <mainClass>es.um.tds.gestiongastos.main.MainApp</mainClass>
                 </configuration>
             </plugin>
             

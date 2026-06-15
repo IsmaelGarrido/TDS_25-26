@@ -74,9 +74,7 @@ public class PersistenciaJSON  {
         
         return om;
     }
-    
-    // ==================== GUARDAR ====================
-    
+
     /**
      * Guarda todos los datos de la aplicación en JSON.
      * @throws IOException si hay error de escritura
@@ -111,9 +109,7 @@ public class PersistenciaJSON  {
             HistorialNotificaciones.getInstance().getNotificaciones()
         );
     }
-    
-    // ==================== CARGAR ====================
-    
+
     /**
      * Carga los datos desde el archivo JSON y los restaura en los repositorios.
      * @return true si se cargaron datos, false si el archivo no existe
@@ -162,14 +158,10 @@ public class PersistenciaJSON  {
         CuentaCompartida.setContador(datos.getContadorCuenta());
         Alerta.setContador(datos.getContadorAlerta());
         Notificacion.setContador(datos.getContadorNotificacion());
-        
-        // Restaurar solo personalizadas — addCategoria les asignará
-        // nuevos IDs continuando desde maxIDCategoria
+
         RepositorioCategorias repoCategorias = RepositorioCategorias.getInstance();
         for (Categoria cat : datos.getCategorias()) {
             if (!repoCategorias.existsByNombre(cat.getNombre())) {
-                // Crear nueva instancia con nuevo ID en lugar de restaurar
-                // la del JSON que tiene ID conflictivo
                 Categoria nueva = new Categoria(cat.getNombre(), false);
                 repoCategorias.addCategoria(nueva);
             }
@@ -210,9 +202,7 @@ public class PersistenciaJSON  {
         RepositorioAlertas.getInstance().reset();
         HistorialNotificaciones.getInstance().reset();
     }
-    
-    // ==================== UTILIDADES ====================
-    
+
     /**
      * Crea el directorio de datos si no existe.
      */

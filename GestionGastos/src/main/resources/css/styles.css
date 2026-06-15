@@ -1,0 +1,687 @@
+/* ============================================================
+   GestionGastos — styles.css
+   Tema oscuro. Variables globales definidas en * { }.
+   Organización por secciones:
+     1. Variables
+     2. Contenedor principal y layout
+     3. Toolbar
+     4. Navegación lateral
+     5. Área de contenido
+     6. Botones de acción
+     7. Formularios (TextField, ComboBox, DatePicker, TextArea)
+     8. Tablas
+     9. Listas (ListView)
+    10. KPI cards y chips de saldo
+    11. Sección Gastos (filtros + tabs + gráficos)
+    12. Sección Alertas
+    13. Sección Importar
+    14. Sección Categorías / Cuentas (paneles split)
+    15. Diálogos
+    16. Scrollbars
+    17. Separadores
+    18. Miscelánea (tooltips, badges, estados)
+   ============================================================ */
+
+/* ── 1. Variables ─────────────────────────────────────────── */
+* {
+    -fx-primary:           #4ecca3;
+    -fx-primary-dark:      #3db892;
+    -fx-background-dark:   #1a1a2e;
+    -fx-background-medium: #16213e;
+    -fx-background-light:  #1a2744;
+    -fx-color-borde: #2a3f5f;
+    -fx-text-primary:      #eeeeee;
+    -fx-text-secondary:    #888888;
+    -fx-danger:            #e06060;
+    -fx-warning:           #f39c12;
+    -fx-success:           #4ecca3;
+}
+
+/* ── 2. Contenedor principal y layout ─────────────────────── */
+.main-container {
+    -fx-background-color: -fx-background-dark;
+}
+
+.content-area {
+    -fx-background-color: -fx-background-dark;
+    -fx-padding: 16;
+}
+
+.main-split {
+    -fx-background-color: -fx-background-dark;
+    -fx-padding: 0;
+}
+
+.main-split > .split-pane-divider {
+    -fx-background-color: -fx-color-borde;
+    -fx-padding: 0 1;
+}
+
+/* ── 3. Toolbar ───────────────────────────────────────────── */
+.toolbar {
+    -fx-background-color: -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-width:     0 0 1 0;
+    -fx-spacing:          8;
+}
+
+.toolbar-logo {
+    -fx-text-fill:   -fx-primary;
+    -fx-font-size:   14px;
+    -fx-font-weight: bold;
+}
+
+.toolbar-sep {
+    -fx-background-color: -fx-color-borde;
+    -fx-padding: 0 1;
+}
+
+/* ── 4. Navegación lateral ────────────────────────────────── */
+.nav-panel {
+    -fx-background-color: -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-width:     0 1 0 0;
+    -fx-padding:          8 0;
+}
+
+.nav-button {
+    -fx-background-color:  transparent;
+    -fx-text-fill:         -fx-text-primary;
+    -fx-font-size:         13px;
+    -fx-cursor:            hand;
+    -fx-border-color:      transparent;
+    -fx-border-width:      0 0 0 3;
+    -fx-background-radius: 0;
+    -fx-alignment:         CENTER-LEFT;
+}
+
+.nav-button:hover {
+    -fx-background-color: -fx-background-light;
+}
+
+.nav-button-selected {
+    -fx-background-color: -fx-background-light;
+    -fx-border-color:     -fx-primary;
+    -fx-text-fill:        -fx-primary;
+}
+
+/* ── 5. Área de contenido ─────────────────────────────────── */
+.panel-titulo {
+    -fx-text-fill:   -fx-text-primary;
+    -fx-font-size:   13px;
+    -fx-font-weight: bold;
+}
+
+.panel-lista,
+.panel-detalle {
+    -fx-background-color: -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:    8;
+    -fx-background-radius: 8;
+}
+
+/* Scroll transparente para InicioView */
+.scroll-transparente {
+    -fx-background:       transparent;
+    -fx-background-color: transparent;
+    -fx-border-color:     transparent;
+}
+.scroll-transparente > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ── 6. Botones de acción ─────────────────────────────────── */
+.btn-accion {
+    -fx-background-color:  -fx-background-light;
+    -fx-text-fill:         -fx-text-primary;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     6;
+    -fx-background-radius: 6;
+    -fx-cursor:            hand;
+    -fx-padding:           5 12;
+}
+
+.btn-accion:hover {
+    -fx-background-color: #2a4f6f;
+}
+
+.btn-accion:disabled {
+    -fx-opacity:  0.4;
+    -fx-cursor:   default;
+}
+
+.btn-peligro {
+    -fx-border-color: #7a2020;
+    -fx-text-fill:    -fx-danger;
+}
+
+.btn-peligro:hover {
+    -fx-background-color: #3d1515;
+    -fx-border-color:     -fx-danger;
+}
+
+/* ── 7. Formularios ───────────────────────────────────────── */
+.text-field,
+.text-area,
+.combo-box,
+.date-picker {
+    -fx-background-color:  -fx-background-light;
+    -fx-text-fill:         -fx-text-primary;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     6;
+    -fx-background-radius: 6;
+    -fx-padding:           5 8;
+}
+
+.text-field:focused,
+.text-area:focused,
+.combo-box:focused,
+.date-picker:focused {
+    -fx-border-color: -fx-primary;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: -fx-background-light;
+    -fx-text-fill:        -fx-text-primary;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-background-color: -fx-background-medium;
+    -fx-text-fill:        -fx-text-primary;
+    -fx-padding:          6 10;
+}
+
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: -fx-background-light;
+}
+
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: #1e3a5a;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: transparent;
+}
+.date-picker .arrow-button .arrow {
+    -fx-background-color: -fx-text-secondary;
+}
+
+/* ── 8. Tablas ────────────────────────────────────────────── */
+.table-view,
+.tabla-gastos {
+    -fx-background-color:  -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     8;
+    -fx-background-radius: 8;
+}
+
+.table-view .column-header,
+.tabla-gastos .column-header {
+    -fx-background-color: -fx-background-light;
+    -fx-padding:          7 8;
+}
+
+.table-view .column-header .label,
+.tabla-gastos .column-header .label {
+    -fx-text-fill:   #b8c4d0;
+    -fx-font-size:   11px;
+    -fx-font-weight: bold;
+}
+
+.table-view .column-header-background,
+.tabla-gastos .column-header-background {
+    -fx-background-color: -fx-background-light;
+}
+
+.table-view .table-row-cell,
+.tabla-gastos .table-row-cell {
+    -fx-background-color: -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-width:     0 0 1 0;
+}
+
+.table-view .table-row-cell:hover,
+.tabla-gastos .table-row-cell:hover {
+    -fx-background-color: -fx-background-light;
+}
+
+.table-view .table-row-cell:selected,
+.tabla-gastos .table-row-cell:selected {
+    -fx-background-color: #1e3a5a;
+}
+
+.table-view .table-cell,
+.tabla-gastos .table-cell {
+    -fx-text-fill: -fx-text-primary;
+    -fx-padding:   7 8;
+}
+
+/* ── 9. Listas ────────────────────────────────────────────── */
+.list-view {
+    -fx-background-color:  -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     6;
+    -fx-background-radius: 6;
+}
+
+.list-view .list-cell {
+    -fx-background-color: -fx-background-medium;
+    -fx-text-fill:        -fx-text-primary;
+    -fx-padding:          8 10;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-width:     0 0 1 0;
+}
+
+.list-view .list-cell:hover {
+    -fx-background-color: -fx-background-light;
+}
+
+.list-view .list-cell:selected {
+    -fx-background-color: #1e3a5a;
+    -fx-border-color:     -fx-primary;
+    -fx-border-width:     0 0 0 3;
+}
+
+/* ── 10. KPI cards y chips de saldo ──────────────────────── */
+.kpi-card {
+    -fx-background-color:  -fx-background-medium;
+    -fx-background-radius: 8;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     8;
+}
+
+.kpi-label {
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-size: 11px;
+}
+
+.kpi-value-normal {
+    -fx-text-fill: -fx-text-primary;
+}
+
+.kpi-value-vacio {
+    -fx-text-fill: -fx-text-secondary;
+}
+
+/* Chips de saldo en InicioView y CuentasView */
+.saldo-chip {
+    -fx-background-color:  -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     6;
+    -fx-background-radius: 6;
+}
+
+/* Tarjetas de cuenta (InicioView) */
+.cuenta-card {
+    -fx-background-color:  -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     8;
+    -fx-background-radius: 8;
+    -fx-cursor:            hand;
+}
+
+.cuenta-card:hover {
+    -fx-background-color: -fx-background-light;
+}
+
+.tipo-badge {
+    -fx-background-color:  #1e3a5a;
+    -fx-text-fill:         -fx-primary;
+    -fx-padding:           2 7;
+    -fx-background-radius: 10;
+    -fx-font-size:         10px;
+}
+
+/* ── 11. Sección Gastos ───────────────────────────────────── */
+
+/* Barra de filtros */
+.filtros-bar {
+    -fx-background-color: -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-width:     0 0 1 0;
+    -fx-padding:          8 14;
+}
+
+.filtros-bar .label {
+    -fx-text-fill: #b8c4d0;
+    -fx-font-size: 11px;
+}
+
+/* Chips de meses */
+.mes-chip {
+    -fx-background-color:  -fx-background-light;
+    -fx-text-fill:         #b8c4d0;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     10;
+    -fx-background-radius: 10;
+    -fx-padding:           3 7;
+    -fx-cursor:            hand;
+    -fx-font-size:         11px;
+}
+
+.mes-chip:hover {
+    -fx-background-color: #2a4f6f;
+    -fx-text-fill:        -fx-text-primary;
+}
+
+.mes-chip:selected {
+    -fx-background-color: #1e3a5a;
+    -fx-border-color:     -fx-primary;
+    -fx-text-fill:        -fx-primary;
+}
+
+/* TabPane de gastos */
+.gastos-tabs {
+    -fx-background-color: -fx-background-dark;
+    -fx-tab-min-width:    90px;
+}
+
+.gastos-tabs > .tab-header-area {
+    -fx-background-color: -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-width:     0 0 1 0;
+    -fx-padding:          0;
+}
+
+.gastos-tabs > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: transparent;
+    -fx-text-fill:        #b8c4d0;
+    -fx-padding:          8 16;
+    -fx-border-width:     0;
+    -fx-font-size:        13px;
+}
+
+.gastos-tabs > .tab-header-area > .headers-region > .tab:hover {
+    -fx-background-color: -fx-background-light;
+    -fx-text-fill:        -fx-text-primary;
+}
+
+.gastos-tabs > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: -fx-background-dark;
+    -fx-text-fill:        -fx-primary;
+    -fx-border-color:     -fx-primary;
+    -fx-border-width:     0 0 2 0;
+}
+
+.gastos-tabs > .tab-header-area > .tab-header-background {
+    -fx-background-color: -fx-background-medium;
+}
+
+.gastos-tabs > .tab-content-area {
+    -fx-background-color: -fx-background-dark;
+    -fx-padding:          0;
+}
+
+/* Gráficos */
+.chart {
+    -fx-background-color: transparent;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-text-fill:        -fx-text-primary;
+}
+
+.chart-legend-item {
+    -fx-text-fill: -fx-text-primary;
+}
+
+.axis-label {
+    -fx-text-fill: #b8c4d0;
+}
+
+.axis {
+    -fx-tick-label-fill: #b8c4d0;
+}
+
+/* ── 12. Sección Alertas ──────────────────────────────────── */
+.lista-alertas,
+.lista-notificaciones {
+    -fx-background-color:  -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     6;
+    -fx-background-radius: 6;
+}
+
+.lista-alertas .list-cell,
+.lista-notificaciones .list-cell {
+    -fx-background-color: -fx-background-medium;
+    -fx-padding:          0;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-width:     0 0 1 0;
+}
+
+.lista-alertas .list-cell:hover,
+.lista-notificaciones .list-cell:hover {
+    -fx-background-color: -fx-background-light;
+}
+
+.lista-alertas .list-cell:selected,
+.lista-notificaciones .list-cell:selected {
+    -fx-background-color: -fx-background-medium;
+}
+
+/* TitledPane del historial */
+.historial-pane {
+    -fx-background-color:  -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     8;
+    -fx-background-radius: 8;
+}
+
+.historial-pane > .title {
+    -fx-background-color: -fx-background-medium;
+    -fx-padding:          8 12;
+}
+
+.historial-pane > .title > .text {
+    -fx-fill: -fx-text-primary;
+}
+
+.historial-pane > .title .arrow {
+    -fx-background-color: -fx-text-secondary;
+}
+
+/* ── 13. Sección Importar ─────────────────────────────────── */
+.drop-zone {
+    -fx-background-color:  -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     10;
+    -fx-border-style:      segments(8, 4);
+    -fx-background-radius: 10;
+}
+
+/* ── 14. Paneles split (Categorías y Cuentas) ─────────────── */
+.split-pane {
+    -fx-background-color: -fx-background-dark;
+    -fx-padding:          0;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-background-color: -fx-color-borde;
+    -fx-padding:          0 1;
+}
+
+.badge-base {
+    -fx-background-color:  #1e3a5a;
+    -fx-text-fill:         -fx-primary;
+    -fx-padding:           2 7;
+    -fx-background-radius: 10;
+    -fx-font-size:         10px;
+}
+
+/* ── 15. Diálogos ─────────────────────────────────────────── */
+.dialog-pane {
+    -fx-background-color: -fx-background-medium;
+    -fx-border-color: -fx-color-borde;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: -fx-background-light;
+}
+
+.dialog-pane .header-panel .label {
+    -fx-text-fill:   -fx-text-primary;
+    -fx-font-size:   14px;
+    -fx-font-weight: bold;
+}
+
+.dialog-pane .content {
+    -fx-background-color: -fx-background-medium;
+    -fx-padding:          10;
+}
+
+.dialog-pane .button-bar .button {
+    -fx-background-color:  -fx-background-light;
+    -fx-text-fill:         -fx-text-primary;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     6;
+    -fx-background-radius: 6;
+    -fx-cursor:            hand;
+    -fx-padding:           6 14;
+}
+
+.dialog-pane .button-bar .button:hover {
+    -fx-background-color: #2a4f6f;
+}
+
+.dialog-pane .button-bar .button:default {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill:        -fx-background-dark;
+    -fx-font-weight:      bold;
+}
+
+.dialog-pane .button-bar .button:default:hover {
+    -fx-background-color: -fx-primary-dark;
+}
+
+/* ── 16. Scrollbars ───────────────────────────────────────── */
+.scroll-bar {
+    -fx-background-color: -fx-background-dark;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: -fx-color-borde;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #3a5f7f;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding:          0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape:   "";
+    -fx-padding: 0;
+}
+
+/* ── 17. Separadores ──────────────────────────────────────── */
+.separator .line {
+    -fx-border-color: -fx-color-borde;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ── 18. Miscelánea ───────────────────────────────────────── */
+.label {
+    -fx-text-fill: -fx-text-primary;
+}
+
+.tooltip {
+    -fx-background-color:  -fx-background-light;
+    -fx-text-fill:         -fx-text-primary;
+    -fx-padding:           8 12;
+    -fx-background-radius: 6;
+    -fx-border-color: -fx-color-borde;
+    -fx-border-radius:     6;
+}
+
+.status-ok      { -fx-text-fill: -fx-success; }
+.status-warning { -fx-text-fill: -fx-warning; }
+.status-danger  { -fx-text-fill: -fx-danger;  }
+
+
+/* ── 19. Panel CLI ────────────────────────────────────────── */
+.cli-panel {
+    -fx-background-color: -fx-background-dark;
+    -fx-border-color:     -fx-color-borde;
+    -fx-border-width:     1 0 0 0;
+}
+
+.cli-panel > .title {
+    -fx-background-color: -fx-background-medium;
+    -fx-padding:          6 14;
+    -fx-font-size:        12px;
+    -fx-cursor:           hand;
+}
+
+.cli-panel > .title > .text {
+    -fx-fill: #b8c4d0;
+}
+
+.cli-panel > .title .arrow {
+    -fx-background-color: #b8c4d0;
+}
+
+.cli-panel > .content {
+    -fx-background-color: -fx-background-dark;
+    -fx-padding:          0;
+}
+
+.cli-contenido {
+    -fx-background-color: -fx-background-dark;
+}
+
+.cli-output {
+    -fx-background-color: #0d0d18;
+    -fx-control-inner-background: #0d0d18;
+    -fx-text-fill:        #b8c4d0;
+    -fx-font-family:      "Monospaced";
+    -fx-font-size:        12px;
+    -fx-border-color:     transparent;
+    -fx-background-insets: 0;
+    -fx-padding:          8 12;
+}
+
+.cli-barra {
+    -fx-background-color: -fx-background-medium;
+    -fx-border-color:     -fx-color-borde;
+    -fx-border-width:     1 0 0 0;
+    -fx-padding:          6 8;
+}
+
+.cli-barra .label {
+    -fx-text-fill:   -fx-primary;
+    -fx-font-family: "Monospaced";
+    -fx-font-size:   13px;
+    -fx-font-weight: bold;
+}
+
+.cli-input {
+    -fx-background-color:  #0d0d18;
+    -fx-text-fill:         -fx-text-primary;
+    -fx-font-family:       "Monospaced";
+    -fx-font-size:         12px;
+    -fx-border-color:      -fx-color-borde;
+    -fx-border-radius:     4;
+    -fx-background-radius: 4;
+    -fx-padding:           5 8;
+}
+
+.cli-input:focused {
+    -fx-border-color: -fx-primary;
+}
